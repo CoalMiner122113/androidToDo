@@ -1,12 +1,17 @@
 package com.example.todo
 import android.service.autofill.TextValueSanitizer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 //Bride for user input to recycler view
-class TaskItemAdapter(val listOfItems: List<String>) : RecyclerView.Adapter<TaskItemAdapter.ViewHolder>() {
+class TaskItemAdapter(val listOfItems: List<String>, val longClickListener: OnLongClickListener) : RecyclerView.Adapter<TaskItemAdapter.ViewHolder>() {
+
+    interface OnLongClickListener{
+        fun onItemLongClicked(position: Int)
+    }
     //Provides direct ref to each view within a data item
     //Caches the views within the item layout for fast access
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -15,7 +20,13 @@ class TaskItemAdapter(val listOfItems: List<String>) : RecyclerView.Adapter<Task
 
         init{
             textView = itemView.findViewById(android.R.id.text1)
+
+            itemView.setOnLongClickListener{
+               longClickListener.onItemLongClicked(adapterPosition)
+                true
+            }
         }
+
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -39,4 +50,6 @@ class TaskItemAdapter(val listOfItems: List<String>) : RecyclerView.Adapter<Task
     override fun getItemCount(): Int {
         return listOfItems.size
     }
+
+
 }
